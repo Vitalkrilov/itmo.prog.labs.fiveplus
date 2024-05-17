@@ -1,0 +1,398 @@
+@startuml
+!theme sketchy-outline
+'!theme cyborg
+skinparam minClassWidth 200
+skinparam nodesep 10
+skinparam ranksep 10
+skinparam minLineSize 10
+skinparam linetype ortho
+
+package vitalkrilov <<Cloud>> {
+    package itmo <<Database>> {
+        package prog <<Node>> {
+            class labs.fiveplus.utilities.Logger {
+            + {static} PrintStream log(String,TextFormatter.Color,String,Object)
+            + {static} PrintStream logError(String,Object)
+            + {static} PrintStream logWarning(String,Object)
+            + {static} PrintStream logInfo(String,Object)
+            + {static} PrintStream printError(String,Object)
+            }
+            abstract class labs.fiveplus.commandline.SubprogramTemplate {
+            # CommandLineWorker commandLineWorker
+            ~ <<Create>> SubprogramTemplate(CommandLineWorker)
+            }
+            class labs.fiveplus.commandline.SubprogramPrintHeightDescending {
+            ~ <<Create>> SubprogramPrintHeightDescending(CommandLineWorker)
+            + Result<Object,String> execute(List<String>)
+            }
+            class labs.fiveplus.collection.CollectionDeserializer {
+            + <<Create>> CollectionDeserializer()
+            + <<Create>> CollectionDeserializer(Class<?>)
+            - {static} Result<T,String> notNullOrNotFound(T)
+            + Collection deserialize(JsonParser,DeserializationContext)
+            }
+            class labs.fiveplus.commandline.SubprogramAdd {
+            ~ <<Create>> SubprogramAdd(CommandLineWorker)
+            + Result<Object,String> execute(List<String>)
+            }
+            class labs.fiveplus.commandline.CommandLineParser {
+            + {static} PCLResult parseCommand(Reader,List<String>)
+            }
+            enum labs.fiveplus.commandline.PCLResult {
+            +  OK
+            +  ERR_END_OF_FILE
+            +  ERR_IO_ERROR
+            }
+            class labs.fiveplus.commandline.SubprogramRemoveHead {
+            ~ <<Create>> SubprogramRemoveHead(CommandLineWorker)
+            + Result<Object,String> execute(List<String>)
+            }
+            enum labs.fiveplus.dataclasses.HairColor {
+            +  RED
+            +  BLUE
+            +  YELLOW
+            }
+            class labs.fiveplus.utilities.ValueParser {
+            + {static} Result<T,String> parseOrNull(String,boolean,Function<String,Result<T,String>>)
+            + {static} Result<Integer,String> parseInteger(String)
+            + {static} Result<Long,String> parseLong(String)
+            + {static} Result<Float,String> parseFloat(String)
+            + {static} Result<Double,String> parseDouble(String)
+            }
+            class labs.fiveplus.commandline.SubprogramUpdate {
+            ~ <<Create>> SubprogramUpdate(CommandLineWorker)
+            + Result<Object,String> execute(List<String>)
+            }
+            class labs.fiveplus.commandline.SubprogramInfo {
+            ~ <<Create>> SubprogramInfo(CommandLineWorker)
+            + Result<Object,String> execute(List<String>)
+            }
+            class labs.fiveplus.utilities.Utils {
+            + {static} Result<File,String> getFile(GFType,String)
+            + {static} Result<String,String> getLine(Reader)
+            }
+            enum labs.fiveplus.utilities.GFType {
+            +  READ
+            +  WRITE
+            }
+            class labs.fiveplus.commandline.SubprogramCountGreaterThanEyeColor {
+            ~ <<Create>> SubprogramCountGreaterThanEyeColor(CommandLineWorker)
+            + Result<Object,String> execute(List<String>)
+            }
+            class labs.fiveplus.commandline.CommandLineWorker {
+            - {static} int MAX_STDIN_RETRIES_WHEN_IO_ERROR
+            - {static} LinkedHashMap<String,Command> commandsDatabase
+            ~ CollectionManager collectionManager
+            ~ Stack<Session> sessions
+            + <<Create>> CommandLineWorker(CollectionManager)
+            - boolean isRunning()
+            ~ boolean isInteractiveNow()
+            ~ Result<String,String> resolvePath(String)
+            + void start(List<String>)
+            }
+            class labs.fiveplus.commandline.CommandLineWorker$Command {
+            ~ String name
+            ~ String description
+            ~ Map<ArgumentType,List<Argument>> arguments
+            ~ <<Create>> Command(String,String,Argument)
+            - String getUsageLine()
+            - String getUsage()
+            - String getHelp()
+            }
+            enum labs.fiveplus.commandline.ArgumentType {
+            +  POSITIONAL
+            +  QUERY
+            +  MULTIPLE
+            }
+            class labs.fiveplus.commandline.CommandLineWorker$Command$Argument {
+            ~ ArgumentType type
+            ~ boolean isOptional
+            ~ String name
+            ~ String description
+            + <<Create>> Argument(ArgumentType,String,String)
+            + <<Create>> Argument(ArgumentType,boolean,String,String)
+            }
+            class labs.fiveplus.commandline.CommandLineWorker$Session {
+            ~ Reader reader
+            ~ String scriptFilename
+            ~ String userAliasFilename
+            ~ boolean unloadRequested
+            ~ <<Create>> Session(Reader)
+            ~ <<Create>> Session(Reader,String,String)
+            ~ boolean isInteractive()
+            }
+            class labs.fiveplus.utilities.NullableLineInputProcessor {
+            - Reader reader
+            + <<Create>> NullableLineInputProcessor(Reader)
+            + Result<T,String> collectInteractively(boolean,int,String,boolean,Function<String,Result<T,String>>)
+            + Result<T,String> collectOnce(boolean,Function<String,Result<T,String>>)
+            }
+            class labs.fiveplus.collection.CollectionSerializer {
+            + <<Create>> CollectionSerializer()
+            + <<Create>> CollectionSerializer(Class<Collection>)
+            + void serialize(Collection,JsonGenerator,SerializerProvider)
+            }
+            class labs.fiveplus.commandline.SubprogramRemoveById {
+            ~ <<Create>> SubprogramRemoveById(CommandLineWorker)
+            + Result<Object,String> execute(List<String>)
+            }
+            class labs.fiveplus.utilities.Option {
+            - {static} Option<Object> NONE
+            ~ T value
+            + <<Create>> Option(T)
+            + <<Create>> Option()
+            + boolean isNone()
+            + boolean isSome()
+            + T get()
+            + T take()
+            + void put(T)
+            + T swap(T)
+            }
+            class labs.fiveplus.commandline.SubprogramAddIfMax {
+            ~ <<Create>> SubprogramAddIfMax(CommandLineWorker)
+            + Result<Object,String> execute(List<String>)
+            }
+            class labs.fiveplus.dataclasses.Coordinates {
+            - int x
+            - Float y
+            + <<Create>> Coordinates()
+            + int getX()
+            + Result<Object,String> setX(int)
+            + Float getY()
+            + Result<Object,String> setY(Float)
+            + Result<Object,String> fillFromReader(boolean,Reader,int)
+            + boolean equals(Object)
+            + int hashCode()
+            + String toString()
+            + Coordinates clone()
+            + int compareTo(Coordinates)
+            }
+            interface labs.fiveplus.commandline.SubprogramExecutable {
+            ~ Result<Object,String> execute(List<String>)
+            }
+            class labs.fiveplus.collection.Collection {
+            ~ LocalDateTime creationDate
+            ~ LinkedList<Person> data
+            ~ int data_Person_id_seq
+            + <<Create>> Collection()
+            + <<Create>> Collection(LocalDateTime,LinkedList<Person>,int)
+            + Collection clone()
+            }
+            class labs.fiveplus.commandline.SubprogramRemoveFirst {
+            ~ <<Create>> SubprogramRemoveFirst(CommandLineWorker)
+            + Result<Object,String> execute(List<String>)
+            }
+            class labs.fiveplus.dataclasses.Location {
+            - Integer x
+            - Float y
+            - double z
+            - String name
+            + <<Create>> Location()
+            + Integer getX()
+            + Result<Object,String> setX(Integer)
+            + Float getY()
+            + Result<Object,String> setY(Float)
+            + double getZ()
+            + Result<Object,String> setZ(double)
+            + String getName()
+            + Result<Object,String> setName(String)
+            + Result<Object,String> fillFromReader(boolean,Reader,int)
+            + boolean equals(Object)
+            + int hashCode()
+            + String toString()
+            + Location clone()
+            + int compareTo(Location)
+            }
+            class labs.fiveplus.commandline.SubprogramSaveCollection {
+            ~ <<Create>> SubprogramSaveCollection(CommandLineWorker)
+            + Result<Object,String> execute(List<String>)
+            }
+            class labs.fiveplus.commandline.SubprogramShow {
+            ~ <<Create>> SubprogramShow(CommandLineWorker)
+            + Result<Object,String> execute(List<String>)
+            }
+            class labs.fiveplus.App {
+            - {static} String DATA_FILE_PATH_ENVVAR
+            + {static} void main(String[])
+            }
+            enum labs.fiveplus.dataclasses.EyeColor {
+            +  GREEN
+            +  BLACK
+            +  BLUE
+            +  YELLOW
+            +  BROWN
+            }
+            class labs.fiveplus.collection.CollectionManager {
+            - String dataFilePath
+            - Collection collection
+            + <<Create>> CollectionManager(String)
+            + void start(List<String>)
+            - Person addToCollection(Person)
+            - Result<Object,String> loadCollection()
+            - Result<Object,String> saveCollection()
+            + Result<Person,String> requestAdd(Person)
+            + Result<CollectionInfo,String> requestInfo()
+            + Result<List<Person>,String> requestCollectionContent()
+            + Result<String,String> requestUpdate(int,Person)
+            + Result<Object,String> requestRemove(int)
+            + Result<Object,String> requestClear()
+            + Result<Person,String> requestPopFront(boolean)
+            + Result<Person,String> requestAddIfMax(Person)
+            + Result<Long,String> requestCountGreaterThanEyeColor(EyeColor)
+            + Result<List<Person>,String> requestPrintNameStartsWith(String)
+            + Result<List<Long>,String> requestPrintHeightDescending()
+            + Result<Boolean,String> requestHasID(int)
+            + Result<Object,String> requestSave()
+            }
+            class labs.fiveplus.commandline.SubprogramPrintNameStartsWith {
+            ~ <<Create>> SubprogramPrintNameStartsWith(CommandLineWorker)
+            + Result<Object,String> execute(List<String>)
+            }
+            class labs.fiveplus.utilities.TextFormatter {
+            + {static} String colorify(String,Color)
+            + {static} String startWithLowercase(String)
+            }
+            enum labs.fiveplus.utilities.Color {
+            +  BLACK
+            +  RED
+            +  GREEN
+            +  YELLOW
+            +  BLUE
+            +  MAGENTA
+            +  CYAN
+            +  WHITE
+            +  BRIGHT_BLACK
+            +  BRIGHT_RED
+            +  BRIGHT_GREEN
+            +  BRIGHT_YELLOW
+            +  BRIGHT_BLUE
+            +  BRIGHT_MAGENTA
+            +  BRIGHT_CYAN
+            +  BRIGHT_WHITE
+            }
+            abstract class labs.fiveplus.utilities.Result {
+            ~ boolean errorAssigned
+            ~ O ok
+            ~ E err
+            + boolean isOk()
+            + boolean isErr()
+            + O getOk()
+            + E getErr()
+            + Result<V,E> andThen(Function<O,Result<V,E>>)
+            + Result<V,E> andThenF(Function<O,V>)
+            + Result<V,E> onErrorF(Function<E,V>)
+            }
+            class labs.fiveplus.utilities.Result$Ok {
+            + <<Create>> Ok(O)
+            + <<Create>> Ok()
+            }
+            class labs.fiveplus.utilities.Result$Err {
+            + <<Create>> Err(E)
+            + <<Create>> Err()
+            }
+            class labs.fiveplus.collection.CollectionInfo {
+            + String typename
+            + LocalDateTime creationDate
+            + int data_Person_id_seq
+            + int size
+            }
+            class labs.fiveplus.utilities.Messages {
+            - {static} String BUNDLE_NAME
+            - {static} ResourceBundle RESOURCE_BUNDLE
+            - <<Create>> Messages()
+            + {static} String getString(String)
+            }
+            interface labs.fiveplus.utilities.ReaderFillable {
+            ~ Result<Object,String> fillFromReader(boolean,Reader,int)
+            ~ Result<Object,String> fillFromReader(boolean,Reader)
+            }
+            class labs.fiveplus.dataclasses.Person {
+            - Integer id
+            - String name
+            - Coordinates coordinates
+            - java.time.LocalDateTime creationDate
+            - long height
+            - EyeColor eyeColor
+            - HairColor hairColor
+            - Country nationality
+            - Location location
+            - {static} Pattern SET_NAME_REGEX_PATTERN
+            + <<Create>> Person()
+            + Integer getId()
+            + Result<Object,String> setId(Integer)
+            + String getName()
+            + Result<Object,String> setName(String)
+            + Coordinates getCoordinates()
+            + void setCoordinates(Coordinates)
+            + LocalDateTime getCreationDate()
+            + void setCreationDate(LocalDateTime)
+            + long getHeight()
+            + Result<Object,String> setHeight(long)
+            + EyeColor getEyeColor()
+            + Result<Object,String> setEyeColor(EyeColor)
+            + HairColor getHairColor()
+            + Result<Object,String> setHairColor(HairColor)
+            + Country getNationality()
+            + Result<Object,String> setNationality(Country)
+            + Location getLocation()
+            + void setLocation(Location)
+            + Result<Object,String> fillFromReader(boolean,Reader,int)
+            + String diff(Person)
+            + boolean equals(Object)
+            + int hashCode()
+            + String toString()
+            + String fieldsToFormattedString()
+            + Person clone()
+            + int compareIndividualsTo(Person)
+            + int compareTo(Person)
+            }
+            class labs.fiveplus.commandline.SubprogramClearCollection {
+            ~ <<Create>> SubprogramClearCollection(CommandLineWorker)
+            + Result<Object,String> execute(List<String>)
+            }
+            enum labs.fiveplus.dataclasses.Country {
+            +  UNITED_KINGDOM
+            +  GERMANY
+            +  CHINA
+            +  ITALY
+            +  JAPAN
+            +  RUSSIA
+            }
+
+
+            labs.fiveplus.commandline.SubprogramExecutable <|.. labs.fiveplus.commandline.SubprogramTemplate
+            labs.fiveplus.commandline.SubprogramTemplate <|-- labs.fiveplus.commandline.SubprogramPrintHeightDescending
+            labs.fiveplus.commandline.SubprogramTemplate <|-- labs.fiveplus.commandline.SubprogramAdd
+            labs.fiveplus.commandline.SubprogramTemplate <|-- labs.fiveplus.commandline.SubprogramRemoveHead
+            labs.fiveplus.commandline.SubprogramTemplate <|-- labs.fiveplus.commandline.SubprogramUpdate
+            labs.fiveplus.commandline.SubprogramTemplate <|-- labs.fiveplus.commandline.SubprogramInfo
+            labs.fiveplus.commandline.SubprogramTemplate <|-- labs.fiveplus.commandline.SubprogramCountGreaterThanEyeColor
+            labs.fiveplus.commandline.CommandLineWorker +.. labs.fiveplus.commandline.CommandLineWorker$Command
+            labs.fiveplus.commandline.CommandLineWorker$Command +.. labs.fiveplus.commandline.CommandLineWorker$Command$Argument
+            labs.fiveplus.commandline.CommandLineWorker +.. labs.fiveplus.commandline.CommandLineWorker$Session
+            labs.fiveplus.commandline.SubprogramTemplate <|-- labs.fiveplus.commandline.SubprogramRemoveById
+            labs.fiveplus.commandline.SubprogramTemplate <|-- labs.fiveplus.commandline.SubprogramAddIfMax
+            labs.fiveplus.dataclasses.ReaderFillable <|.. labs.fiveplus.dataclasses.Coordinates
+            labs.fiveplus.dataclasses.Cloneable <|.. labs.fiveplus.dataclasses.Coordinates
+            labs.fiveplus.dataclasses.Comparable <|.. labs.fiveplus.dataclasses.Coordinates
+            labs.fiveplus.commandline.SubprogramTemplate <|-- labs.fiveplus.commandline.SubprogramRemoveFirst
+            labs.fiveplus.dataclasses.ReaderFillable <|.. labs.fiveplus.dataclasses.Location
+            labs.fiveplus.dataclasses.Cloneable <|.. labs.fiveplus.dataclasses.Location
+            labs.fiveplus.dataclasses.Comparable <|.. labs.fiveplus.dataclasses.Location
+            labs.fiveplus.commandline.SubprogramTemplate <|-- labs.fiveplus.commandline.SubprogramSaveCollection
+            labs.fiveplus.commandline.SubprogramTemplate <|-- labs.fiveplus.commandline.SubprogramShow
+            labs.fiveplus.commandline.SubprogramTemplate <|-- labs.fiveplus.commandline.SubprogramPrintNameStartsWith
+            labs.fiveplus.utilities.Result +.. labs.fiveplus.utilities.Result$Ok
+            labs.fiveplus.utilities.Result <|-- labs.fiveplus.utilities.Result$Ok
+            labs.fiveplus.utilities.Result +.. labs.fiveplus.utilities.Result$Err
+            labs.fiveplus.utilities.Result <|-- labs.fiveplus.utilities.Result$Err
+            labs.fiveplus.dataclasses.ReaderFillable <|.. labs.fiveplus.dataclasses.Person
+            labs.fiveplus.dataclasses.Cloneable <|.. labs.fiveplus.dataclasses.Person
+            labs.fiveplus.dataclasses.Comparable <|.. labs.fiveplus.dataclasses.Person
+            labs.fiveplus.commandline.SubprogramTemplate <|-- labs.fiveplus.commandline.SubprogramClearCollection
+        }
+    }
+}
+com.fasterxml.jackson.databind.deser.std.StdDeserializer <|--------- vitalkrilov.itmo.prog.labs.fiveplus.collection.CollectionDeserializer
+com.fasterxml.jackson.databind.ser.std.StdSerializer <|--------- vitalkrilov.itmo.prog.labs.fiveplus.collection.CollectionSerializer
+@enduml
