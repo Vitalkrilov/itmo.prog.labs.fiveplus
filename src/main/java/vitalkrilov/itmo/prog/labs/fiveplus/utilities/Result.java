@@ -1,5 +1,6 @@
 package vitalkrilov.itmo.prog.labs.fiveplus.utilities;
 
+import java.io.Serializable;
 import java.util.function.Function;
 
 /**
@@ -7,7 +8,7 @@ import java.util.function.Function;
  * @param <O> Contained value's type if it's Ok
  * @param <E> Contained value's type if it's Err
  */
-public abstract class Result<O, E> {
+public abstract class Result<O, E> implements Serializable {
     /**
      * Result::Ok
      * @param <O> Contained value's type if it's Ok

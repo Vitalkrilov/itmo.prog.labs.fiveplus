@@ -1,5 +1,11 @@
 /.idea
 /misc
-/target
-/dependency-reduced-pom.xml
 /diagram.png
+
+/target
+/serverModule/target
+/clientModule/target
+
+/dependency-reduced-pom.xml
+/serverModule/dependency-reduced-pom.xml
+/clientModule/dependency-reduced-pom.xml

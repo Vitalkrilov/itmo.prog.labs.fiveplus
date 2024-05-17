@@ -4,9 +4,10 @@ import org.jetbrains.annotations.NotNull;
 import vitalkrilov.itmo.prog.labs.fiveplus.utilities.*;
 
 import java.io.Reader;
+import java.io.Serializable;
 import java.util.Objects;
 
-public class Coordinates implements ReaderFillable, Cloneable, Comparable<Coordinates> {
+public class Coordinates implements ReaderFillable, Cloneable, Comparable<Coordinates>, Serializable {
     private int x;
     private @NotNull Float y; //Поле не может быть null
 
@@ -49,6 +50,19 @@ public class Coordinates implements ReaderFillable, Cloneable, Comparable<Coordi
             if (res.isErr()) return res;
         }
 
+        return new Result.Ok<>();
+    }
+
+    public Result<Object, String> validate() {
+        String msgFormat = "Invalid data in structure " + this.getClass().getSimpleName() + " in field ";
+        {
+            var res = this.setX(this.getX());
+            if (res.isErr()) return new Result.Err<>(msgFormat + "`x`: " + res.getErr());
+        }
+        {
+            var res = this.setY(this.getY());
+            if (res.isErr()) return new Result.Err<>(msgFormat + "`y`: " + res.getErr());
+        }
         return new Result.Ok<>();
     }
 

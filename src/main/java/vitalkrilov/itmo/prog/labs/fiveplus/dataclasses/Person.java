@@ -5,6 +5,7 @@ import org.jetbrains.annotations.Nullable;
 import vitalkrilov.itmo.prog.labs.fiveplus.utilities.*;
 
 import java.io.Reader;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
@@ -12,7 +13,7 @@ import java.util.Arrays;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
-public class Person implements ReaderFillable, Cloneable, Comparable<Person> {
+public class Person implements ReaderFillable, Cloneable, Comparable<Person>, Serializable {
     private @NotNull Integer id; //Поле не может быть null, Значение поля должно быть больше 0, Значение этого поля должно быть уникальным, Значение этого поля должно генерироваться автоматически
     private @NotNull String name; //Поле не может быть null, Строка не может быть пустой
     private @NotNull Coordinates coordinates; //Поле не может быть null
@@ -235,6 +236,43 @@ public class Person implements ReaderFillable, Cloneable, Comparable<Person> {
         if (!sb.isEmpty() && sb.charAt(sb.length() - 1) == '\n')
             sb.deleteCharAt(sb.length() - 1);
         return sb.toString();
+    }
+
+    public Result<Object, String> validate() {
+        String msgFormat = "Invalid data in structure " + this.getClass().getSimpleName() + " in field ";
+        {
+            var res = this.setId(this.getId());
+            if (res.isErr()) return new Result.Err<>(msgFormat + "`id`: " + res.getErr());
+        }
+        {
+            var res = this.setName(this.getName());
+            if (res.isErr()) return new Result.Err<>(msgFormat + "`name`: " + res.getErr());
+        }
+        {
+            var res = this.setHeight(this.getHeight());
+            if (res.isErr()) return new Result.Err<>(msgFormat + "`height`: " + res.getErr());
+        }
+        {
+            var res = this.setEyeColor(this.getEyeColor());
+            if (res.isErr()) return new Result.Err<>(msgFormat + "`eyeColor`: " + res.getErr());
+        }
+        {
+            var res = this.setHairColor(this.getHairColor());
+            if (res.isErr()) return new Result.Err<>(msgFormat + "`hairColor`: " + res.getErr());
+        }
+        {
+            var res = this.setNationality(this.getNationality());
+            if (res.isErr()) return new Result.Err<>(msgFormat + "`nationality`: " + res.getErr());
+        }
+        {
+            var res = this.coordinates.validate();
+            if (res.isErr()) return new Result.Err<>(msgFormat + "`coordinates`: " + res.getErr());
+        }
+        if (this.location != null) {
+            var res = this.location.validate();
+            if (res.isErr()) return new Result.Err<>(msgFormat + "`location`: " + res.getErr());
+        }
+        return new Result.Ok<>();
     }
 
     @Override

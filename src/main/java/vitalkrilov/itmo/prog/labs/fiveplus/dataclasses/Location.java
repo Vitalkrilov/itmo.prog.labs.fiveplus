@@ -3,11 +3,11 @@ package vitalkrilov.itmo.prog.labs.fiveplus.dataclasses;
 import org.jetbrains.annotations.NotNull;
 import vitalkrilov.itmo.prog.labs.fiveplus.utilities.*;
 
-import java.awt.geom.Arc2D;
 import java.io.Reader;
+import java.io.Serializable;
 import java.util.Objects;
 
-public class Location implements ReaderFillable, Cloneable, Comparable<Location> {
+public class Location implements ReaderFillable, Cloneable, Comparable<Location>, Serializable {
     private @NotNull Integer x; //Поле не может быть null
     private @NotNull Float y; //Поле не может быть null
     private double z;
@@ -86,6 +86,27 @@ public class Location implements ReaderFillable, Cloneable, Comparable<Location>
             if (res.isErr()) return res;
         }
 
+        return new Result.Ok<>();
+    }
+
+    public Result<Object, String> validate() {
+        String msgFormat = "Invalid data in structure " + this.getClass().getSimpleName() + " in field ";
+        {
+            var res = this.setX(this.getX());
+            if (res.isErr()) return new Result.Err<>(msgFormat + "`x`: " + res.getErr());
+        }
+        {
+            var res = this.setY(this.getY());
+            if (res.isErr()) return new Result.Err<>(msgFormat + "`y`: " + res.getErr());
+        }
+        {
+            var res = this.setZ(this.getZ());
+            if (res.isErr()) return new Result.Err<>(msgFormat + "`z`: " + res.getErr());
+        }
+        {
+            var res = this.setName(this.getName());
+            if (res.isErr()) return new Result.Err<>(msgFormat + "`name`: " + res.getErr());
+        }
         return new Result.Ok<>();
     }
 

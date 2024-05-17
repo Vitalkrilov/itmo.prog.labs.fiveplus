@@ -4,10 +4,15 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.PrintStream;
 
+// Since I have my own logger, then I will just leave here commented usage example of asked one. They're interchangeable.
+//import java.util.logging.Logger;
+
 /**
  * Program's Logger class.
  */
 public class Logger {
+    //private static final Logger LOGGER = Logger.getLogger("labs-fiveplus");
+
     /**
      * Outputs colored log messages with newline at the end to stderr.
      * @param logType Log type (will be in square braces).
@@ -47,6 +52,7 @@ public class Logger {
      * @return Same PrintStream as printf does.
      */
     public static PrintStream logInfo(@NotNull String format, Object... args) {
+        //LOGGER.info("This is an info message");
         return log("INFO", TextFormatter.Color.WHITE, format, args);
     }
 

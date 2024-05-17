@@ -10,41 +10,12 @@ skinparam linetype ortho
 package vitalkrilov <<Cloud>> {
     package itmo <<Database>> {
         package prog <<Node>> {
-            class labs.fiveplus.utilities.Logger {
-            + {static} PrintStream log(String,TextFormatter.Color,String,Object)
-            + {static} PrintStream logError(String,Object)
-            + {static} PrintStream logWarning(String,Object)
-            + {static} PrintStream logInfo(String,Object)
-            + {static} PrintStream printError(String,Object)
-            }
-            abstract class labs.fiveplus.commandline.SubprogramTemplate {
-            # CommandLineWorker commandLineWorker
-            ~ <<Create>> SubprogramTemplate(CommandLineWorker)
-            }
-            class labs.fiveplus.commandline.SubprogramPrintHeightDescending {
-            ~ <<Create>> SubprogramPrintHeightDescending(CommandLineWorker)
+            class labs.fiveplus.client.commandline.SubprogramSaveCollection {
+            ~ <<Create>> SubprogramSaveCollection(CommandLineWorker)
             + Result<Object,String> execute(List<String>)
             }
-            class labs.fiveplus.collection.CollectionDeserializer {
-            + <<Create>> CollectionDeserializer()
-            + <<Create>> CollectionDeserializer(Class<?>)
-            - {static} Result<T,String> notNullOrNotFound(T)
-            + Collection deserialize(JsonParser,DeserializationContext)
-            }
-            class labs.fiveplus.commandline.SubprogramAdd {
-            ~ <<Create>> SubprogramAdd(CommandLineWorker)
-            + Result<Object,String> execute(List<String>)
-            }
-            class labs.fiveplus.commandline.CommandLineParser {
-            + {static} PCLResult parseCommand(Reader,List<String>)
-            }
-            enum labs.fiveplus.commandline.PCLResult {
-            +  OK
-            +  ERR_END_OF_FILE
-            +  ERR_IO_ERROR
-            }
-            class labs.fiveplus.commandline.SubprogramRemoveHead {
-            ~ <<Create>> SubprogramRemoveHead(CommandLineWorker)
+            class labs.fiveplus.client.commandline.SubprogramPrintNameStartsWith {
+            ~ <<Create>> SubprogramPrintNameStartsWith(CommandLineWorker)
             + Result<Object,String> execute(List<String>)
             }
             enum labs.fiveplus.dataclasses.HairColor {
@@ -52,89 +23,49 @@ package vitalkrilov <<Cloud>> {
             +  BLUE
             +  YELLOW
             }
-            class labs.fiveplus.utilities.ValueParser {
-            + {static} Result<T,String> parseOrNull(String,boolean,Function<String,Result<T,String>>)
-            + {static} Result<Integer,String> parseInteger(String)
-            + {static} Result<Long,String> parseLong(String)
-            + {static} Result<Float,String> parseFloat(String)
-            + {static} Result<Double,String> parseDouble(String)
+            class labs.fiveplus.client.commandline.SubprogramPrintHeightDescending {
+            ~ <<Create>> SubprogramPrintHeightDescending(CommandLineWorker)
+            + Result<Object,String> execute(List<String>)
             }
-            class labs.fiveplus.commandline.SubprogramUpdate {
+            interface labs.fiveplus.client.commandline.SubprogramExecutable {
+            ~ Result<Object,String> execute(List<String>)
+            }
+            class labs.fiveplus.utilities.CommandLineParser {
+            + {static} PCLResult parseCommand(Reader,List<String>)
+            }
+            enum labs.fiveplus.utilities.PCLResult {
+            +  OK
+            +  ERR_END_OF_FILE
+            +  ERR_IO_ERROR
+            }
+            class labs.fiveplus.network.requests.RequestHasID {
+            + int idToCheck
+            + <<Create>> RequestHasID(int,int)
+            }
+            class labs.fiveplus.network.requests.RequestSaveCollection {
+            + <<Create>> RequestSaveCollection(int)
+            }
+            class labs.fiveplus.client.commandline.SubprogramAddIfMax {
+            ~ <<Create>> SubprogramAddIfMax(CommandLineWorker)
+            + Result<Object,String> execute(List<String>)
+            }
+            class labs.fiveplus.network.requests.RequestShow {
+            + <<Create>> RequestShow(int)
+            }
+            class labs.fiveplus.network.responses.CollectionInfoResponse {
+            + CollectionInfo collectionInfo
+            + <<Create>> CollectionInfoResponse(int,CollectionInfo)
+            + Result<Object,String> validate()
+            }
+            class labs.fiveplus.client.commandline.SubprogramUpdate {
             ~ <<Create>> SubprogramUpdate(CommandLineWorker)
             + Result<Object,String> execute(List<String>)
             }
-            class labs.fiveplus.commandline.SubprogramInfo {
-            ~ <<Create>> SubprogramInfo(CommandLineWorker)
-            + Result<Object,String> execute(List<String>)
-            }
-            class labs.fiveplus.utilities.Utils {
-            + {static} Result<File,String> getFile(GFType,String)
-            + {static} Result<String,String> getLine(Reader)
-            }
-            enum labs.fiveplus.utilities.GFType {
-            +  READ
-            +  WRITE
-            }
-            class labs.fiveplus.commandline.SubprogramCountGreaterThanEyeColor {
-            ~ <<Create>> SubprogramCountGreaterThanEyeColor(CommandLineWorker)
-            + Result<Object,String> execute(List<String>)
-            }
-            class labs.fiveplus.commandline.CommandLineWorker {
-            - {static} int MAX_STDIN_RETRIES_WHEN_IO_ERROR
-            - {static} LinkedHashMap<String,Command> commandsDatabase
-            ~ CollectionManager collectionManager
-            ~ Stack<Session> sessions
-            + <<Create>> CommandLineWorker(CollectionManager)
-            - boolean isRunning()
-            ~ boolean isInteractiveNow()
-            ~ Result<String,String> resolvePath(String)
-            + void start(List<String>)
-            }
-            class labs.fiveplus.commandline.CommandLineWorker$Command {
-            ~ String name
-            ~ String description
-            ~ Map<ArgumentType,List<Argument>> arguments
-            ~ <<Create>> Command(String,String,Argument)
-            - String getUsageLine()
-            - String getUsage()
-            - String getHelp()
-            }
-            enum labs.fiveplus.commandline.ArgumentType {
-            +  POSITIONAL
-            +  QUERY
-            +  MULTIPLE
-            }
-            class labs.fiveplus.commandline.CommandLineWorker$Command$Argument {
-            ~ ArgumentType type
-            ~ boolean isOptional
-            ~ String name
-            ~ String description
-            + <<Create>> Argument(ArgumentType,String,String)
-            + <<Create>> Argument(ArgumentType,boolean,String,String)
-            }
-            class labs.fiveplus.commandline.CommandLineWorker$Session {
-            ~ Reader reader
-            ~ String scriptFilename
-            ~ String userAliasFilename
-            ~ boolean unloadRequested
-            ~ <<Create>> Session(Reader)
-            ~ <<Create>> Session(Reader,String,String)
-            ~ boolean isInteractive()
-            }
-            class labs.fiveplus.utilities.NullableLineInputProcessor {
-            - Reader reader
-            + <<Create>> NullableLineInputProcessor(Reader)
-            + Result<T,String> collectInteractively(boolean,int,String,boolean,Function<String,Result<T,String>>)
-            + Result<T,String> collectOnce(boolean,Function<String,Result<T,String>>)
-            }
-            class labs.fiveplus.collection.CollectionSerializer {
-            + <<Create>> CollectionSerializer()
-            + <<Create>> CollectionSerializer(Class<Collection>)
-            + void serialize(Collection,JsonGenerator,SerializerProvider)
-            }
-            class labs.fiveplus.commandline.SubprogramRemoveById {
-            ~ <<Create>> SubprogramRemoveById(CommandLineWorker)
-            + Result<Object,String> execute(List<String>)
+            class labs.fiveplus.network.requests.RequestUpdate {
+            + int idToUpdate
+            + Person person
+            + <<Create>> RequestUpdate(int,int,Person)
+            + Result<Object,String> validate()
             }
             class labs.fiveplus.utilities.Option {
             - {static} Option<Object> NONE
@@ -148,37 +79,19 @@ package vitalkrilov <<Cloud>> {
             + void put(T)
             + T swap(T)
             }
-            class labs.fiveplus.commandline.SubprogramAddIfMax {
-            ~ <<Create>> SubprogramAddIfMax(CommandLineWorker)
+            class labs.fiveplus.network.responses.PersonResponse {
+            + Person person
+            + <<Create>> PersonResponse(int,Person)
+            + Result<Object,String> validate()
+            }
+            class labs.fiveplus.client.commandline.SubprogramRemoveHead {
+            ~ <<Create>> SubprogramRemoveHead(CommandLineWorker)
             + Result<Object,String> execute(List<String>)
             }
-            class labs.fiveplus.dataclasses.Coordinates {
-            - int x
-            - Float y
-            + <<Create>> Coordinates()
-            + int getX()
-            + Result<Object,String> setX(int)
-            + Float getY()
-            + Result<Object,String> setY(Float)
-            + Result<Object,String> fillFromReader(boolean,Reader,int)
-            + boolean equals(Object)
-            + int hashCode()
-            + String toString()
-            + Coordinates clone()
-            + int compareTo(Coordinates)
+            class labs.fiveplus.network.requests.RequestInfo {
+            + <<Create>> RequestInfo(int)
             }
-            interface labs.fiveplus.commandline.SubprogramExecutable {
-            ~ Result<Object,String> execute(List<String>)
-            }
-            class labs.fiveplus.collection.Collection {
-            ~ LocalDateTime creationDate
-            ~ LinkedList<Person> data
-            ~ int data_Person_id_seq
-            + <<Create>> Collection()
-            + <<Create>> Collection(LocalDateTime,LinkedList<Person>,int)
-            + Collection clone()
-            }
-            class labs.fiveplus.commandline.SubprogramRemoveFirst {
+            class labs.fiveplus.client.commandline.SubprogramRemoveFirst {
             ~ <<Create>> SubprogramRemoveFirst(CommandLineWorker)
             + Result<Object,String> execute(List<String>)
             }
@@ -197,56 +110,12 @@ package vitalkrilov <<Cloud>> {
             + String getName()
             + Result<Object,String> setName(String)
             + Result<Object,String> fillFromReader(boolean,Reader,int)
+            + Result<Object,String> validate()
             + boolean equals(Object)
             + int hashCode()
             + String toString()
             + Location clone()
             + int compareTo(Location)
-            }
-            class labs.fiveplus.commandline.SubprogramSaveCollection {
-            ~ <<Create>> SubprogramSaveCollection(CommandLineWorker)
-            + Result<Object,String> execute(List<String>)
-            }
-            class labs.fiveplus.commandline.SubprogramShow {
-            ~ <<Create>> SubprogramShow(CommandLineWorker)
-            + Result<Object,String> execute(List<String>)
-            }
-            class labs.fiveplus.App {
-            - {static} String DATA_FILE_PATH_ENVVAR
-            + {static} void main(String[])
-            }
-            enum labs.fiveplus.dataclasses.EyeColor {
-            +  GREEN
-            +  BLACK
-            +  BLUE
-            +  YELLOW
-            +  BROWN
-            }
-            class labs.fiveplus.collection.CollectionManager {
-            - String dataFilePath
-            - Collection collection
-            + <<Create>> CollectionManager(String)
-            + void start(List<String>)
-            - Person addToCollection(Person)
-            - Result<Object,String> loadCollection()
-            - Result<Object,String> saveCollection()
-            + Result<Person,String> requestAdd(Person)
-            + Result<CollectionInfo,String> requestInfo()
-            + Result<List<Person>,String> requestCollectionContent()
-            + Result<String,String> requestUpdate(int,Person)
-            + Result<Object,String> requestRemove(int)
-            + Result<Object,String> requestClear()
-            + Result<Person,String> requestPopFront(boolean)
-            + Result<Person,String> requestAddIfMax(Person)
-            + Result<Long,String> requestCountGreaterThanEyeColor(EyeColor)
-            + Result<List<Person>,String> requestPrintNameStartsWith(String)
-            + Result<List<Long>,String> requestPrintHeightDescending()
-            + Result<Boolean,String> requestHasID(int)
-            + Result<Object,String> requestSave()
-            }
-            class labs.fiveplus.commandline.SubprogramPrintNameStartsWith {
-            ~ <<Create>> SubprogramPrintNameStartsWith(CommandLineWorker)
-            + Result<Object,String> execute(List<String>)
             }
             class labs.fiveplus.utilities.TextFormatter {
             + {static} String colorify(String,Color)
@@ -270,31 +139,9 @@ package vitalkrilov <<Cloud>> {
             +  BRIGHT_CYAN
             +  BRIGHT_WHITE
             }
-            abstract class labs.fiveplus.utilities.Result {
-            ~ boolean errorAssigned
-            ~ O ok
-            ~ E err
-            + boolean isOk()
-            + boolean isErr()
-            + O getOk()
-            + E getErr()
-            + Result<V,E> andThen(Function<O,Result<V,E>>)
-            + Result<V,E> andThenF(Function<O,V>)
-            + Result<V,E> onErrorF(Function<E,V>)
-            }
-            class labs.fiveplus.utilities.Result$Ok {
-            + <<Create>> Ok(O)
-            + <<Create>> Ok()
-            }
-            class labs.fiveplus.utilities.Result$Err {
-            + <<Create>> Err(E)
-            + <<Create>> Err()
-            }
-            class labs.fiveplus.collection.CollectionInfo {
-            + String typename
-            + LocalDateTime creationDate
-            + int data_Person_id_seq
-            + int size
+            class labs.fiveplus.client.commandline.SubprogramInfo {
+            ~ <<Create>> SubprogramInfo(CommandLineWorker)
+            + Result<Object,String> execute(List<String>)
             }
             class labs.fiveplus.utilities.Messages {
             - {static} String BUNDLE_NAME
@@ -338,6 +185,7 @@ package vitalkrilov <<Cloud>> {
             + void setLocation(Location)
             + Result<Object,String> fillFromReader(boolean,Reader,int)
             + String diff(Person)
+            + Result<Object,String> validate()
             + boolean equals(Object)
             + int hashCode()
             + String toString()
@@ -346,9 +194,262 @@ package vitalkrilov <<Cloud>> {
             + int compareIndividualsTo(Person)
             + int compareTo(Person)
             }
-            class labs.fiveplus.commandline.SubprogramClearCollection {
+            class labs.fiveplus.utilities.Logger {
+            + {static} PrintStream log(String,TextFormatter.Color,String,Object)
+            + {static} PrintStream logError(String,Object)
+            + {static} PrintStream logWarning(String,Object)
+            + {static} PrintStream logInfo(String,Object)
+            + {static} PrintStream printError(String,Object)
+            }
+            class labs.fiveplus.server.collection.Collection {
+            ~ LocalDateTime creationDate
+            ~ LinkedList<Person> data
+            ~ int data_Person_id_seq
+            + <<Create>> Collection()
+            + <<Create>> Collection(LocalDateTime,LinkedList<Person>,int)
+            + Collection clone()
+            }
+            class labs.fiveplus.server.collection.CollectionDeserializer {
+            + <<Create>> CollectionDeserializer()
+            + <<Create>> CollectionDeserializer(Class<?>)
+            - {static} Result<T,String> notNullOrNotFound(T)
+            + Collection deserialize(JsonParser,DeserializationContext)
+            }
+            class labs.fiveplus.client.collection.CollectionManager {
+            - {static} int BUFFER_SIZE
+            - {static} int MAX_DEFAULT_REQUEST_TIMEOUT
+            - {static} int MAX_CHECK_NETWORK_TIMEOUT
+            - String dataFilePath
+            - String hostname
+            - int port
+            - int nextRequestID
+            - List<Response> responsesStorage
+            + <<Create>> CollectionManager(String,int)
+            - Result<Response,String> sendRequest(Request)
+            + Result<Object,String> testConnection()
+            + Result<Person,String> requestAdd(Person)
+            + Result<CollectionInfo,String> requestInfo()
+            + Result<List<Person>,String> requestCollectionContent()
+            + Result<String,String> requestUpdate(int,Person)
+            + Result<Object,String> requestRemove(int)
+            + Result<Object,String> requestClear()
+            + Result<Person,String> requestPopFront(boolean)
+            + Result<Person,String> requestAddIfMax(Person)
+            + Result<Long,String> requestCountGreaterThanEyeColor(EyeColor)
+            + Result<List<Person>,String> requestPrintNameStartsWith(String)
+            + Result<List<Long>,String> requestPrintHeightDescending()
+            + Result<Boolean,String> requestHasID(int)
+            + Result<Object,String> requestSave()
+            }
+            class labs.fiveplus.utilities.ValueParser {
+            + {static} Result<T,String> parseOrNull(String,boolean,Function<String,Result<T,String>>)
+            + {static} Result<Integer,String> parseInteger(String)
+            + {static} Result<Long,String> parseLong(String)
+            + {static} Result<Float,String> parseFloat(String)
+            + {static} Result<Double,String> parseDouble(String)
+            }
+            class labs.fiveplus.network.requests.RequestAddIfMax {
+            + Person person
+            + <<Create>> RequestAddIfMax(int,Person)
+            + Result<Object,String> validate()
+            }
+            class labs.fiveplus.network.requests.RequestRemoveById {
+            + int idToRemove
+            + <<Create>> RequestRemoveById(int,int)
+            }
+            class labs.fiveplus.utilities.Utils {
+            + {static} Result<File,String> getFile(GFType,String)
+            + {static} Result<String,String> getLine(Reader)
+            }
+            enum labs.fiveplus.utilities.GFType {
+            +  READ
+            +  WRITE
+            }
+            class labs.fiveplus.network.requests.RequestAck {
+            + <<Create>> RequestAck(int)
+            }
+            class labs.fiveplus.utilities.NullableLineInputProcessor {
+            - Reader reader
+            + <<Create>> NullableLineInputProcessor(Reader)
+            + Result<T,String> collectInteractively(boolean,int,String,boolean,Function<String,Result<T,String>>)
+            + Result<T,String> collectOnce(boolean,Function<String,Result<T,String>>)
+            }
+            abstract class labs.fiveplus.network.requests.Request {
+            - {static} int BUFFER_SIZE
+            + int id
+            + <<Create>> Request(int)
+            + Result<Object,String> validate()
+            + Result<Response,String> sendToServer(byte[],DatagramSocket,InetAddress,int,List<Response>)
+            }
+            class labs.fiveplus.client.commandline.SubprogramAdd {
+            ~ <<Create>> SubprogramAdd(CommandLineWorker)
+            + Result<Object,String> execute(List<String>)
+            }
+            class labs.fiveplus.network.requests.RequestCountGreaterThanEyeColor {
+            + EyeColor eyeColor
+            + <<Create>> RequestCountGreaterThanEyeColor(int,EyeColor)
+            }
+            class labs.fiveplus.client.commandline.SubprogramShow {
+            ~ <<Create>> SubprogramShow(CommandLineWorker)
+            + Result<Object,String> execute(List<String>)
+            }
+            class labs.fiveplus.network.responses.LongsResponse {
+            + List<Long> longs
+            + <<Create>> LongsResponse(int,List<Long>)
+            }
+            class labs.fiveplus.client.commandline.CommandLineWorker {
+            - {static} int MAX_STDIN_RETRIES_WHEN_IO_ERROR
+            - {static} LinkedHashMap<String,Command> commandsDatabase
+            ~ CollectionManager collectionManager
+            ~ Stack<Session> sessions
+            + <<Create>> CommandLineWorker()
+            - boolean isRunning()
+            ~ boolean isInteractiveNow()
+            ~ Result<String,String> resolvePath(String)
+            + int run(List<String>)
+            }
+            class labs.fiveplus.client.commandline.CommandLineWorker$Command {
+            ~ String name
+            ~ String description
+            ~ Map<ArgumentType,List<Argument>> arguments
+            ~ <<Create>> Command(String,String,Argument)
+            - String getUsageLine()
+            - String getUsage()
+            - String getHelp()
+            }
+            enum labs.fiveplus.client.commandline.ArgumentType {
+            +  POSITIONAL
+            +  QUERY
+            +  MULTIPLE
+            }
+            class labs.fiveplus.client.commandline.CommandLineWorker$Command$Argument {
+            ~ ArgumentType type
+            ~ boolean isOptional
+            ~ String name
+            ~ String description
+            + <<Create>> Argument(ArgumentType,String,String)
+            + <<Create>> Argument(ArgumentType,boolean,String,String)
+            }
+            class labs.fiveplus.client.commandline.CommandLineWorker$Session {
+            ~ Reader reader
+            ~ String scriptFilename
+            ~ String userAliasFilename
+            ~ boolean unloadRequested
+            ~ <<Create>> Session(Reader)
+            ~ <<Create>> Session(Reader,String,String)
+            ~ boolean isInteractive()
+            }
+            class labs.fiveplus.network.requests.RequestPrintHeightDescending {
+            + <<Create>> RequestPrintHeightDescending(int)
+            }
+            class labs.fiveplus.network.requests.RequestPrintNameStartsWith {
+            + String nameStart
+            + <<Create>> RequestPrintNameStartsWith(int,String)
+            }
+            class labs.fiveplus.dataclasses.Coordinates {
+            - int x
+            - Float y
+            + <<Create>> Coordinates()
+            + int getX()
+            + Result<Object,String> setX(int)
+            + Float getY()
+            + Result<Object,String> setY(Float)
+            + Result<Object,String> fillFromReader(boolean,Reader,int)
+            + Result<Object,String> validate()
+            + boolean equals(Object)
+            + int hashCode()
+            + String toString()
+            + Coordinates clone()
+            + int compareTo(Coordinates)
+            }
+            class labs.fiveplus.network.responses.CollectionInfo {
+            + String typename
+            + LocalDateTime creationDate
+            + int data_Person_id_seq
+            + int size
+            + Result<Object,String> validate()
+            }
+            abstract class labs.fiveplus.client.commandline.SubprogramTemplate {
+            # CommandLineWorker commandLineWorker
+            ~ <<Create>> SubprogramTemplate(CommandLineWorker)
+            }
+            class labs.fiveplus.client.commandline.SubprogramRemoveById {
+            ~ <<Create>> SubprogramRemoveById(CommandLineWorker)
+            + Result<Object,String> execute(List<String>)
+            }
+            class labs.fiveplus.client.ClientEntrypoint {
+            + {static} void main(String[])
+            }
+            enum labs.fiveplus.dataclasses.EyeColor {
+            +  GREEN
+            +  BLACK
+            +  BLUE
+            +  YELLOW
+            +  BROWN
+            }
+            class labs.fiveplus.network.requests.RequestAdd {
+            + Person person
+            + <<Create>> RequestAdd(int,Person)
+            + Result<Object,String> validate()
+            }
+            abstract class labs.fiveplus.utilities.Result {
+            ~ boolean errorAssigned
+            ~ O ok
+            ~ E err
+            + boolean isOk()
+            + boolean isErr()
+            + O getOk()
+            + E getErr()
+            + Result<V,E> andThen(Function<O,Result<V,E>>)
+            + Result<V,E> andThenF(Function<O,V>)
+            + Result<V,E> onErrorF(Function<E,V>)
+            }
+            class labs.fiveplus.utilities.Result$Ok {
+            + <<Create>> Ok(O)
+            + <<Create>> Ok()
+            }
+            class labs.fiveplus.utilities.Result$Err {
+            + <<Create>> Err(E)
+            + <<Create>> Err()
+            }
+            class labs.fiveplus.network.responses.PersonsResponse {
+            + List<Person> persons
+            + <<Create>> PersonsResponse(int,List<Person>)
+            + Result<Object,String> validate()
+            }
+            class labs.fiveplus.server.collection.CollectionSerializer {
+            + <<Create>> CollectionSerializer()
+            + <<Create>> CollectionSerializer(Class<Collection>)
+            + void serialize(Collection,JsonGenerator,SerializerProvider)
+            }
+            class labs.fiveplus.network.requests.RequestPopFront {
+            + boolean returnElement
+            + <<Create>> RequestPopFront(int,boolean)
+            }
+            class labs.fiveplus.client.commandline.SubprogramCountGreaterThanEyeColor {
+            ~ <<Create>> SubprogramCountGreaterThanEyeColor(CommandLineWorker)
+            + Result<Object,String> execute(List<String>)
+            }
+            class labs.fiveplus.client.commandline.SubprogramClearCollection {
             ~ <<Create>> SubprogramClearCollection(CommandLineWorker)
             + Result<Object,String> execute(List<String>)
+            }
+            class labs.fiveplus.server.ServerEntrypoint {
+            - {static} String DATA_FILE_PATH_ENVVAR
+            + {static} void main(String[])
+            }
+            class labs.fiveplus.network.responses.Response {
+            - int id
+            - Result<String,String> result
+            + <<Create>> Response(int)
+            + Result<Object,String> sendToClient(ByteBuffer,DatagramChannel,InetSocketAddress)
+            + Result<Object,String> validate()
+            + int getID()
+            + Result<String,String> getResult()
+            + Response setResult(Result<String,String>)
+            }
+            class labs.fiveplus.network.requests.RequestClearCollection {
+            + <<Create>> RequestClearCollection(int)
             }
             enum labs.fiveplus.dataclasses.Country {
             +  UNITED_KINGDOM
@@ -358,41 +459,91 @@ package vitalkrilov <<Cloud>> {
             +  JAPAN
             +  RUSSIA
             }
+            class labs.fiveplus.server.collection.CollectionManager {
+            - {static} int BUFFER_SIZE
+            - String dataFilePath
+            - Collection collection
+            - int port
+            + <<Create>> CollectionManager(String,int)
+            + void start(List<String>)
+            - Person addToCollection(Person)
+            - Result<Object,String> loadCollection()
+            - Result<Object,String> saveCollection()
+            + Result<Person,String> requestAdd(Person)
+            + Result<CollectionInfo,String> requestInfo()
+            + Result<List<Person>,String> requestCollectionContent()
+            + Result<String,String> requestUpdate(int,Person)
+            + Result<Object,String> requestRemove(int)
+            + Result<Object,String> requestClear()
+            + Result<Person,String> requestPopFront(boolean)
+            + Result<Person,String> requestAddIfMax(Person)
+            + Result<Long,String> requestCountGreaterThanEyeColor(EyeColor)
+            + Result<List<Person>,String> requestPrintNameStartsWith(String)
+            + Result<List<Long>,String> requestPrintHeightDescending()
+            + Result<Boolean,String> requestHasID(int)
+            + Result<Object,String> requestSave()
+            }
 
 
-            labs.fiveplus.commandline.SubprogramExecutable <|.. labs.fiveplus.commandline.SubprogramTemplate
-            labs.fiveplus.commandline.SubprogramTemplate <|-- labs.fiveplus.commandline.SubprogramPrintHeightDescending
-            labs.fiveplus.commandline.SubprogramTemplate <|-- labs.fiveplus.commandline.SubprogramAdd
-            labs.fiveplus.commandline.SubprogramTemplate <|-- labs.fiveplus.commandline.SubprogramRemoveHead
-            labs.fiveplus.commandline.SubprogramTemplate <|-- labs.fiveplus.commandline.SubprogramUpdate
-            labs.fiveplus.commandline.SubprogramTemplate <|-- labs.fiveplus.commandline.SubprogramInfo
-            labs.fiveplus.commandline.SubprogramTemplate <|-- labs.fiveplus.commandline.SubprogramCountGreaterThanEyeColor
-            labs.fiveplus.commandline.CommandLineWorker +.. labs.fiveplus.commandline.CommandLineWorker$Command
-            labs.fiveplus.commandline.CommandLineWorker$Command +.. labs.fiveplus.commandline.CommandLineWorker$Command$Argument
-            labs.fiveplus.commandline.CommandLineWorker +.. labs.fiveplus.commandline.CommandLineWorker$Session
-            labs.fiveplus.commandline.SubprogramTemplate <|-- labs.fiveplus.commandline.SubprogramRemoveById
-            labs.fiveplus.commandline.SubprogramTemplate <|-- labs.fiveplus.commandline.SubprogramAddIfMax
-            labs.fiveplus.dataclasses.ReaderFillable <|.. labs.fiveplus.dataclasses.Coordinates
-            labs.fiveplus.dataclasses.Cloneable <|.. labs.fiveplus.dataclasses.Coordinates
-            labs.fiveplus.dataclasses.Comparable <|.. labs.fiveplus.dataclasses.Coordinates
-            labs.fiveplus.commandline.SubprogramTemplate <|-- labs.fiveplus.commandline.SubprogramRemoveFirst
+
+            labs.fiveplus.client.commandline.SubprogramTemplate <|-- labs.fiveplus.client.commandline.SubprogramSaveCollection
+            labs.fiveplus.client.commandline.SubprogramTemplate <|-- labs.fiveplus.client.commandline.SubprogramPrintNameStartsWith
+            labs.fiveplus.client.commandline.SubprogramTemplate <|-- labs.fiveplus.client.commandline.SubprogramPrintHeightDescending
+            labs.fiveplus.network.requests.Request <|-- labs.fiveplus.network.requests.RequestHasID
+            labs.fiveplus.network.requests.Request <|-- labs.fiveplus.network.requests.RequestSaveCollection
+            labs.fiveplus.client.commandline.SubprogramTemplate <|-- labs.fiveplus.client.commandline.SubprogramAddIfMax
+            labs.fiveplus.network.requests.Request <|-- labs.fiveplus.network.requests.RequestShow
+            labs.fiveplus.network.responses.Response <|-- labs.fiveplus.network.responses.CollectionInfoResponse
+            labs.fiveplus.client.commandline.SubprogramTemplate <|-- labs.fiveplus.client.commandline.SubprogramUpdate
+            labs.fiveplus.network.requests.Request <|-- labs.fiveplus.network.requests.RequestUpdate
+            labs.fiveplus.network.responses.Response <|-- labs.fiveplus.network.responses.PersonResponse
+            labs.fiveplus.client.commandline.SubprogramTemplate <|-- labs.fiveplus.client.commandline.SubprogramRemoveHead
+            labs.fiveplus.network.requests.Request <|-- labs.fiveplus.network.requests.RequestInfo
+            labs.fiveplus.client.commandline.SubprogramTemplate <|-- labs.fiveplus.client.commandline.SubprogramRemoveFirst
             labs.fiveplus.dataclasses.ReaderFillable <|.. labs.fiveplus.dataclasses.Location
             labs.fiveplus.dataclasses.Cloneable <|.. labs.fiveplus.dataclasses.Location
             labs.fiveplus.dataclasses.Comparable <|.. labs.fiveplus.dataclasses.Location
-            labs.fiveplus.commandline.SubprogramTemplate <|-- labs.fiveplus.commandline.SubprogramSaveCollection
-            labs.fiveplus.commandline.SubprogramTemplate <|-- labs.fiveplus.commandline.SubprogramShow
-            labs.fiveplus.commandline.SubprogramTemplate <|-- labs.fiveplus.commandline.SubprogramPrintNameStartsWith
+            labs.fiveplus.client.commandline.SubprogramTemplate <|-- labs.fiveplus.client.commandline.SubprogramInfo
+            labs.fiveplus.dataclasses.ReaderFillable <|.. labs.fiveplus.dataclasses.Person
+            labs.fiveplus.dataclasses.Cloneable <|.. labs.fiveplus.dataclasses.Person
+            labs.fiveplus.dataclasses.Comparable <|.. labs.fiveplus.dataclasses.Person
+            labs.fiveplus.network.requests.Request <|-- labs.fiveplus.network.requests.RequestAddIfMax
+            labs.fiveplus.network.requests.Request <|-- labs.fiveplus.network.requests.RequestRemoveById
+            labs.fiveplus.network.requests.Request <|-- labs.fiveplus.network.requests.RequestAck
+            labs.fiveplus.network.requests.Serializable <|.. labs.fiveplus.network.requests.Request
+            labs.fiveplus.client.commandline.SubprogramTemplate <|-- labs.fiveplus.client.commandline.SubprogramAdd
+            labs.fiveplus.network.requests.Request <|-- labs.fiveplus.network.requests.RequestCountGreaterThanEyeColor
+            labs.fiveplus.client.commandline.SubprogramTemplate <|-- labs.fiveplus.client.commandline.SubprogramShow
+            labs.fiveplus.network.responses.Response <|-- labs.fiveplus.network.responses.LongsResponse
+            labs.fiveplus.client.commandline.CommandLineWorker +.. labs.fiveplus.client.commandline.CommandLineWorker$Command
+            labs.fiveplus.client.commandline.CommandLineWorker$Command +.. labs.fiveplus.client.commandline.CommandLineWorker$Command$Argument
+            labs.fiveplus.client.commandline.CommandLineWorker +.. labs.fiveplus.client.commandline.CommandLineWorker$Session
+            labs.fiveplus.network.requests.Request <|-- labs.fiveplus.network.requests.RequestPrintHeightDescending
+            labs.fiveplus.network.requests.Request <|-- labs.fiveplus.network.requests.RequestPrintNameStartsWith
+            labs.fiveplus.dataclasses.ReaderFillable <|.. labs.fiveplus.dataclasses.Coordinates
+            labs.fiveplus.dataclasses.Cloneable <|.. labs.fiveplus.dataclasses.Coordinates
+            labs.fiveplus.dataclasses.Comparable <|.. labs.fiveplus.dataclasses.Coordinates
+            labs.fiveplus.client.commandline.SubprogramExecutable <|.. labs.fiveplus.client.commandline.SubprogramTemplate
+            labs.fiveplus.client.commandline.SubprogramTemplate <|-- labs.fiveplus.client.commandline.SubprogramRemoveById
+            labs.fiveplus.network.requests.Request <|-- labs.fiveplus.network.requests.RequestAdd
             labs.fiveplus.utilities.Result +.. labs.fiveplus.utilities.Result$Ok
             labs.fiveplus.utilities.Result <|-- labs.fiveplus.utilities.Result$Ok
             labs.fiveplus.utilities.Result +.. labs.fiveplus.utilities.Result$Err
             labs.fiveplus.utilities.Result <|-- labs.fiveplus.utilities.Result$Err
-            labs.fiveplus.dataclasses.ReaderFillable <|.. labs.fiveplus.dataclasses.Person
-            labs.fiveplus.dataclasses.Cloneable <|.. labs.fiveplus.dataclasses.Person
-            labs.fiveplus.dataclasses.Comparable <|.. labs.fiveplus.dataclasses.Person
-            labs.fiveplus.commandline.SubprogramTemplate <|-- labs.fiveplus.commandline.SubprogramClearCollection
+            labs.fiveplus.network.responses.Response <|-- labs.fiveplus.network.responses.PersonsResponse
+            labs.fiveplus.network.requests.Request <|-- labs.fiveplus.network.requests.RequestPopFront
+            labs.fiveplus.client.commandline.SubprogramTemplate <|-- labs.fiveplus.client.commandline.SubprogramCountGreaterThanEyeColor
+            labs.fiveplus.client.commandline.SubprogramTemplate <|-- labs.fiveplus.client.commandline.SubprogramClearCollection
+            labs.fiveplus.network.requests.Request <|-- labs.fiveplus.network.requests.RequestClearCollection
         }
     }
 }
-com.fasterxml.jackson.databind.deser.std.StdDeserializer <|--------- vitalkrilov.itmo.prog.labs.fiveplus.collection.CollectionDeserializer
-com.fasterxml.jackson.databind.ser.std.StdSerializer <|--------- vitalkrilov.itmo.prog.labs.fiveplus.collection.CollectionSerializer
+java.io.Serializable <|.. vitalkrilov.itmo.prog.labs.fiveplus.network.responses.Response
+java.io.Serializable <|.. vitalkrilov.itmo.prog.labs.fiveplus.dataclasses.Location
+java.io.Serializable <|.. vitalkrilov.itmo.prog.labs.fiveplus.dataclasses.Person
+com.fasterxml.jackson.databind.deser.std.StdDeserializer <|-- vitalkrilov.itmo.prog.labs.fiveplus.server.collection.CollectionDeserializer
+java.io.Serializable <|.. vitalkrilov.itmo.prog.labs.fiveplus.dataclasses.Coordinates
+java.io.Serializable <|.. vitalkrilov.itmo.prog.labs.fiveplus.network.responses.CollectionInfo
+java.io.Serializable <|.. vitalkrilov.itmo.prog.labs.fiveplus.utilities.Result
+com.fasterxml.jackson.databind.ser.std.StdSerializer <|-- vitalkrilov.itmo.prog.labs.fiveplus.server.collection.CollectionSerializer
 @enduml
